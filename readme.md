@@ -16,6 +16,7 @@ A aplicação é um gerenciador de estante de livros com autenticação, CRUD co
 | Amazon ECS Fargate | Orquestração de containers na nuvem |
 | Amazon RDS MySQL | Banco de dados gerenciado |
 | GitHub Actions | Pipeline CI/CD |
+| Trivy | Scan de vulnerabilidades nas imagens Docker (DevSecOps) |
 
 ---
 
@@ -156,6 +157,14 @@ Pipeline de deploy automatizado configurado para rodar a cada push na branch `ma
 push na main → checkout → configure AWS credentials → login ECR →
 build + push imagem PHP → build + push imagem Nginx → force new deployment no ECS
 ```
+## DevSecOps — Trivy
+
+A pipeline de CI inclui scan automático de vulnerabilidades nas imagens Docker antes de qualquer push para o ECR.
+
+O Trivy analisa as imagens `shelfie-app` e `shelfie-nginx` a cada push na branch `develop`, bloqueando a pipeline caso encontre vulnerabilidades classificadas como `HIGH` ou `CRITICAL`.
+
+Dessa forma, nenhuma imagem com vulnerabilidade grave chega ao ECR ou é deployada em produção.
+
 ## GitHub Actions Pipeline
 ![Pipeline](assets/github-actions-pipeline.png)
 
