@@ -24,8 +24,27 @@ jobs:
       - name: Login no ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build imagem PHP
+      - name: Build da imagem PHP
         run: docker build -t shelfie-app:ci ./app
 
-      - name: Build imagem Nginx
+      - name: Build da imagem Nginx
         run: docker build -f nginx/dockerfile -t shelfie-nginx:ci .
+
+      - name: Scan de vulnerabilidades imagem PHP com trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: shelfie-app:ci
+          format: 'table'
+          exit-code: '1'
+          severity: 'HIGH,CRITICAL'
+
+      - name: Scan de vulnerabilidades imagem Nginx com Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: shelfie-nginx:ci
+          format: 'table'
+          exit-code: '1'
+          severity: 'HIGH,CRITICAL'
+
+
+
