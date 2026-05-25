@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-
+    paths-ignore:
+      - '**.md'
+      - 'assets/**'
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   ECR_REPOSITORY_APP: ${{ secrets.ECR_REPOSITORY_APP }}
