@@ -226,7 +226,7 @@ Dessa forma, imagens vulneráveis não são enviadas ao ECR nem chegam ao ambien
 - [x] Fase 2 — Amazon ECR
 - [x] Fase 3 — Amazon ECS Fargate
 - [x] Fase 4 — Amazon RDS MySQL
-- [x] Fase 5 — CI/CD com GitHub Actions
+- [x] Fase 5 — CI/CD com GitHub Actions e DevSecOps
 - [ ] Projeto 2 — EKS + GitLab CI
 
 ---
