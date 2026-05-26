@@ -17,6 +17,14 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
+
+      - name: Scan de código com Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >
+            p/php
+            p/secrets
+            p/owasp-top-ten
       - name: Configurar credenciais AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:

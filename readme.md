@@ -17,7 +17,7 @@ A aplicação é um gerenciador de estante de livros com autenticação, CRUD co
 | Amazon RDS MySQL | Banco de dados gerenciado |
 | GitHub Actions | Pipeline CI/CD |
 | Trivy | Scan de vulnerabilidades nas imagens Docker (DevSecOps) |
-
+| Semgrep | análise estática de código (SAST)|
 ---
 
 ## Arquitetura
@@ -153,17 +153,43 @@ Pipeline de deploy automatizado configurado para rodar a cada push na branch `ma
 
 ### Fluxo da pipeline
 
+
+## CI — Validação e Segurança (develop)
+
 ```
-push na main → checkout → configure AWS credentials → login ECR →
-build + push imagem PHP → build + push imagem Nginx → force new deployment no ECS
+push na develop → checkout → Semgrep (SAST) → configure AWS credentials →
+login ECR → build imagem PHP → build imagem Nginx → Trivy scan imagens Docker → pipeline verde
 ```
-## DevSecOps — Trivy
+## CD - Deploy ECS (main)
 
-A pipeline de CI inclui scan automático de vulnerabilidades nas imagens Docker antes de qualquer push para o ECR.
+```
+push na main → checkout → configure AWS credentials → 
+login ECR → build + push imagem PHP → build + push imagem Nginx → force new deployment no ECS
+```
 
-O Trivy analisa as imagens `shelfie-app` e `shelfie-nginx` a cada push na branch `develop`, bloqueando a pipeline caso encontre vulnerabilidades classificadas como `HIGH` ou `CRITICAL`.
+### DevSecOps — Semgrep + Trivy
 
-Dessa forma, nenhuma imagem com vulnerabilidade grave chega ao ECR ou é deployada em produção.
+A pipeline de CI possui múltiplas camadas de segurança automatizadas utilizando Semgrep e Trivy.
+
+# Semgrep — SAST
+
+O Semgrep realiza análise estática de código (SAST) no projeto PHP a cada push na branch develop.
+
+As regras utilizadas incluem:
+
+p/php → vulnerabilidades específicas da linguagem PHP
+p/secrets → detecção de secrets hardcoded
+p/owasp-top-ten → validação baseada no OWASP Top 10
+
+O objetivo é identificar vulnerabilidades e más práticas diretamente no código-fonte antes do build das imagens Docker.
+
+# Trivy — Container Security
+
+Após o build das imagens Docker, o Trivy executa scan automático de vulnerabilidades nas imagens shelfie-app e shelfie-nginx.
+
+A pipeline é bloqueada automaticamente caso sejam encontradas vulnerabilidades classificadas como HIGH ou CRITICAL.
+
+Dessa forma, imagens vulneráveis não são enviadas ao ECR nem chegam ao ambiente de produção.
 
 ## GitHub Actions Pipeline
 ![Pipeline](assets/github-actions-pipeline.png)
