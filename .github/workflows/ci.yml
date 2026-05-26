@@ -1,53 +1,54 @@
-name: CI —  Validação de build
+name: Build da imagem e verificação de segurança
 
 on:
   push:
     branches:
       - develop
-    paths-ignore:
-      - '**.md'
-      - 'assets/**'
-      - 'docs/**'
+
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
-  build:
-    name: Build Images
+
+  build-and-scan:
+    name: Build e Scan
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Configurar credenciais AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login no ECR
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build da imagem PHP
+      - name: Build imagem PHP
         run: docker build -t shelfie-app:ci ./app
 
-      - name: Build da imagem Nginx
+      - name: Build imagem Nginx
         run: docker build -f nginx/dockerfile -t shelfie-nginx:ci .
 
-      - name: Scan de vulnerabilidades imagem PHP com trivy
-        uses: aquasecurity/trivy-action@v0.36.0
+      - name: Scan imagem PHP com Trivy
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: shelfie-app:ci
-          format: 'table'
-          exit-code: '1'
-          severity: 'HIGH,CRITICAL'
+          format: table
+          exit-code: 1
+          severity: CRITICAL,HIGH
 
-      - name: Scan de vulnerabilidades imagem Nginx com Trivy
-        uses: aquasecurity/trivy-action@v0.36.0
+      - name: Scan imagem Nginx com Trivy
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: shelfie-nginx:ci
-          format: 'table'
-          exit-code: '1'
-          severity: 'HIGH,CRITICAL'
+          format: table
+          exit-code: 1
+          severity: CRITICAL,HIGH
 
+      - name: Scan de codigo com semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >
+            p/php
+            p/secrets
+            p/owasp-top-ten
+      
 
-
+      - name: CI concluído
+        run: echo "Build, e verificações com Trivy e Semgrep passaram. Código aprovado para PR"

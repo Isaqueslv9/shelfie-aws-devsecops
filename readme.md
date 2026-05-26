@@ -17,7 +17,7 @@ A aplicação é um gerenciador de estante de livros com autenticação, CRUD co
 | Amazon RDS MySQL | Banco de dados gerenciado |
 | GitHub Actions | Pipeline CI/CD |
 | Trivy | Scan de vulnerabilidades nas imagens Docker (DevSecOps) |
-
+| Semgrep | análise estática de código (SAST)|
 ---
 
 ## Arquitetura
@@ -153,17 +153,43 @@ Pipeline de deploy automatizado configurado para rodar a cada push na branch `ma
 
 ### Fluxo da pipeline
 
+
+## CI — Validação e Segurança (develop)
+
+```
+push na develop → checkout → build imagem PHP → build imagem Nginx →
+Trivy scan PHP → Trivy scan Nginx → Semgrep (SAST) → pipeline verde
+```
+## CD - Deploy ECR e ECS (main)
+
 ```
 push na main → checkout → configure AWS credentials → login ECR →
 build + push imagem PHP → build + push imagem Nginx → force new deployment no ECS
 ```
-## DevSecOps — Trivy
 
-A pipeline de CI inclui scan automático de vulnerabilidades nas imagens Docker antes de qualquer push para o ECR.
+### DevSecOps — Semgrep + Trivy
 
-O Trivy analisa as imagens `shelfie-app` e `shelfie-nginx` a cada push na branch `develop`, bloqueando a pipeline caso encontre vulnerabilidades classificadas como `HIGH` ou `CRITICAL`.
+A pipeline de CI possui múltiplas camadas de segurança automatizadas utilizando Semgrep e Trivy.
 
-Dessa forma, nenhuma imagem com vulnerabilidade grave chega ao ECR ou é deployada em produção.
+# Semgrep — SAST
+
+O Semgrep realiza análise estática de código (SAST) no projeto PHP a cada push na branch develop.
+
+As regras utilizadas incluem:
+
+p/php → vulnerabilidades específicas da linguagem PHP
+p/secrets → detecção de secrets hardcoded
+p/owasp-top-ten → validação baseada no OWASP Top 10
+
+O objetivo é identificar vulnerabilidades e más práticas diretamente no código-fonte antes do build das imagens Docker.
+
+# Trivy — Container Security
+
+Após o build das imagens Docker, o Trivy executa scan automático de vulnerabilidades nas imagens shelfie-app e shelfie-nginx.
+
+A pipeline é bloqueada automaticamente caso sejam encontradas vulnerabilidades classificadas como HIGH ou CRITICAL.
+
+Dessa forma, imagens vulneráveis não são enviadas ao ECR nem chegam ao ambiente de produção.
 
 ## GitHub Actions Pipeline
 ![Pipeline](assets/github-actions-pipeline.png)
@@ -200,7 +226,7 @@ Dessa forma, nenhuma imagem com vulnerabilidade grave chega ao ECR ou é deploya
 - [x] Fase 2 — Amazon ECR
 - [x] Fase 3 — Amazon ECS Fargate
 - [x] Fase 4 — Amazon RDS MySQL
-- [x] Fase 5 — CI/CD com GitHub Actions
+- [x] Fase 5 — CI/CD com GitHub Actions e DevSecOps
 - [ ] Projeto 2 — EKS + GitLab CI
 
 ---
