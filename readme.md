@@ -157,14 +157,14 @@ Pipeline de deploy automatizado configurado para rodar a cada push na branch `ma
 ## CI — Validação e Segurança (develop)
 
 ```
-push na develop → checkout → Semgrep (SAST) → configure AWS credentials →
-login ECR → build imagem PHP → build imagem Nginx → Trivy scan imagens Docker → pipeline verde
+push na develop → checkout → build imagem PHP → build imagem Nginx →
+Trivy scan PHP → Trivy scan Nginx → Semgrep (SAST) → pipeline verde
 ```
-## CD - Deploy ECS (main)
+## CD - Deploy ECR e ECS (main)
 
 ```
-push na main → checkout → configure AWS credentials → 
-login ECR → build + push imagem PHP → build + push imagem Nginx → force new deployment no ECS
+push na main → checkout → configure AWS credentials → login ECR →
+build + push imagem PHP → build + push imagem Nginx → force new deployment no ECS
 ```
 
 ### DevSecOps — Semgrep + Trivy
