@@ -13,28 +13,46 @@ A aplicação é um gerenciador de estante de livros com autenticação, CRUD co
 | MySQL 9.7 | Banco de dados local |
 | Docker & Docker Compose | Containerização e orquestração local |
 | Amazon ECR | Registry de imagens |
-| Amazon ECS Fargate | Orquestração de containers na nuvem |
-| Amazon RDS MySQL | Banco de dados gerenciado |
+| Amazon ECS | Orquestração de containers na nuvem |
+| Amazon RDS | Banco de dados gerenciado |
 | GitHub Actions | Pipeline CI/CD |
 | Trivy | Scan de vulnerabilidades nas imagens Docker (DevSecOps) |
 | Semgrep | análise estática de código (SAST)|
 ---
 
-## Arquitetura
 
-![Arquitetura](assets/arquitetura.png)
+# 🏗️ Arquitetura Geral do Ecossistema
+
+Para garantir um ciclo de desenvolvimento moderno, seguro e escalável, o projeto **Shelfie** foi desenhado separando as responsabilidades entre o ambiente de desenvolvimento local (Docker Compose) e o ambiente de produção serverless na nuvem.
+
+![Arquitetura Geral do Shelfie](assets/shelfie-cicd-pipeline.png)
 
 ---
 
-## GitFlow
+### Estratégia de Branching (GitFlow)
 
-| Branch | Pipeline | Ação |
-|---|---|---|
-| `develop` | `ci.yml` | Build e validação — sem deploy |
-| `main` | `deploy.yml` | Deploy automático em produção |
+A esteira de automação é orientada ao comportamento das branches do repositório, garantindo que nenhum código quebre a produção:
 
-**Fluxo:**
-develop → PR → main → produção
+| Branch | Pipeline | Escopo | Ação |
+|---|---|---|---|
+| `develop` | `ci.yml` | Integração Contínua (CI) | Build de teste, scans de segurança, linters e validações de código — **Sem deploy**. |
+| `main` | `deploy.yml` | Entrega Contínua (CD) | Scan de segurança, build, push para o Amazon ECR e **Deploy automático no ECS Fargate**. |
+
+**Fluxo de Trabalho:**
+`develop` ➔ *Pull Request (Aprovação)* ➔ `main` ➔ *Deploy em Produção (AWS)*
+
+## Esteira de Integração e Entrega Contínua (CI/CD)
+
+O fluxo de implantação automatizada (GitOps) na branch principal segue o pipeline linear e seguro detalhado abaixo:
+
+![Pipeline de CI/CD ECS ](assets/arquitetura.png)
+
+### Práticas de DevSecOps Aplicadas no Pipeline:
+* **Scan de Secrets:** Utilização do `GitLeaks` para impedir o vazamento de chaves AWS e credenciais no histórico do Git.
+* **Análise de Vulnerabilidades (SCA):** `Trivy Scan` bloqueando o build caso as imagens base do PHP ou Nginx contenham vulnerabilidades de nível *CRITICAL* ou *HIGH*.
+* **Análise Estática de Código (SAST):** `Semgrep` validando as boas práticas do código PHP contra o OWASP Top 10 antes do deploy.
+
+
 
 ---
 
