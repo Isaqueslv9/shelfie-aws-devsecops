@@ -5,6 +5,13 @@ on:
     branches:
       - develop
 
+    paths-ignore:
+      - 'README.md'
+      - 'assets/**'
+      - 'images/**'
+      - 'docs/**'
+      - '.gitignore'
+
 permissions:
   contents: read
   security-events: write
