@@ -22,9 +22,8 @@ availability_zones = ["us-east-1a", "us-east-1b"]
 db_instance_class        = "db.t3.micro"
 db_name                  = "shelfie"
 db_username              = "admin"
-db_allocated_storage     = 20
-db_multi_az              = false   # true apenas em produção crítica
-db_backup_retention_days = 7
+db_allocated_storage = 20
+db_multi_az          = false   # true apenas em produção crítica
 
 # =============================================================================
 # ECS FARGATE

@@ -29,9 +29,8 @@ module "rds" {
   db_instance_class        = var.db_instance_class
   db_name                  = var.db_name
   db_username              = var.db_username
-  db_allocated_storage     = var.db_allocated_storage
-  db_multi_az              = var.db_multi_az
-  db_backup_retention_days = var.db_backup_retention_days
+  db_allocated_storage = var.db_allocated_storage
+  db_multi_az          = var.db_multi_az
 }
 
 module "ecs" {

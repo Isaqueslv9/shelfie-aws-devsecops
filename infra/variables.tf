@@ -57,13 +57,6 @@ variable "db_multi_az" {
   default     = false
 }
 
-variable "db_backup_retention_days" {
-  description = "Quantos dias de backups automáticos manter. Mínimo recomendado: 7."
-  type        = number
-  default     = 7
-}
-
-
 variable "task_cpu" {
   description = "CPU alocada para a ECS Task em unidades Fargate. Valores válidos: 256, 512, 1024, 2048, 4096."
   type        = string
