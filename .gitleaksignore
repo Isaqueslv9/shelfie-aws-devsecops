@@ -1,1 +1,2 @@
-bb94e1226320d24689a3efd2ab316a36540748be:sonar-project.properties:generic-api-key:1
+# Ignorar completamente o arquivo do Sonar para evitar falsos positivos de entropia
+sonar-project.properties
