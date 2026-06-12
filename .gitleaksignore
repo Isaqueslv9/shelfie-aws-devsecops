@@ -1,0 +1,2 @@
+# Ignorar completamente o arquivo do Sonar para evitar falsos positivos de entropia
+sonar-project.properties
