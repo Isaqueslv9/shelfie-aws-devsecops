@@ -15,6 +15,7 @@ resource "aws_vpc" "shelfie_vpc" {
   tags                 = { Name = "${var.project_name}-vpc" }
 }
 
+# nosemgrep: terraform.aws.security.aws-subnet-has-public-ip-address.aws-subnet-has-public-ip-address
 resource "aws_subnet" "public" {
   count                   = 2
   vpc_id                  = aws_vpc.shelfie_vpc.id

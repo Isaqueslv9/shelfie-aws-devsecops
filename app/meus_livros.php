@@ -21,7 +21,9 @@ if (!empty($_GET['filtro_status'])) {
     $params[] = $_GET['filtro_status'];
 }
 
-$sql .= " ORDER BY data_adicao DESC LIMIT $limit OFFSET $offset";
+$sql .= " ORDER BY data_adicao DESC LIMIT ? OFFSET ?";
+$params[] = $limit;
+$params[] = $offset;
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $livros = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -54,7 +56,7 @@ $total_pages = ceil($total_livros / $limit);
     <?php foreach ($livros as $livro): ?>
         <div class="livro-card">
             <div class="card-favorito">
-                <a href="processa_favorito.php?id=<?= $livro['id'] ?>">
+                <a href="processa_favorito.php?id=<?= htmlspecialchars($livro['id']) ?>">
                     <i class="<?= $livro['favorito'] ? 'fa-solid fa-star' : 'fa-regular fa-star' ?>"></i>
                 </a>
             </div>
@@ -66,9 +68,11 @@ $total_pages = ceil($total_livros / $limit);
             <?php endif; ?>
 
             <span class="status-tag"><?= htmlspecialchars($livro['andamento']) ?></span>
+            
             <div class="card-actions">
-                <a href="editar_livro.php?id=<?= $livro['id'] ?>" class="btn-edit">Editar</a>
-                <a href="processa_exclusao.php?id=<?= $livro['id'] ?>" class="btn-delete" onclick="return confirm('Tem certeza que deseja excluir este livro?')">Excluir</a>
+                <a href="editar_livro.php?id=<?= htmlspecialchars($livro['id']) ?>" class="btn-edit">Editar</a>
+                
+                <a href="processa_exclusao.php?id=<?= htmlspecialchars($livro['id']) ?>" class="btn-delete" onclick="return confirm('Tem certeza que deseja excluir este livro?')">Excluir</a>
             </div>
         </div>
     <?php endforeach; ?>
@@ -78,7 +82,7 @@ $total_pages = ceil($total_livros / $limit);
 
     <div class="pagination">
         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <a href="?page=<?= $i ?>&busca=<?= htmlspecialchars($_GET['busca'] ?? '') ?>&filtro_status=<?= htmlspecialchars($_GET['filtro_status'] ?? '') ?>" class="<?= $page == $i ? 'active' : '' ?>"><?= $i ?></a>
+            <a href="?page=<?= htmlspecialchars($i) ?>&busca=<?= htmlspecialchars($_GET['busca'] ?? '') ?>&filtro_status=<?= htmlspecialchars($_GET['filtro_status'] ?? '') ?>" class="<?= $page == $i ? 'active' : '' ?>"><?= htmlspecialchars($i) ?></a>
         <?php endfor; ?>
     </div>
 </div>

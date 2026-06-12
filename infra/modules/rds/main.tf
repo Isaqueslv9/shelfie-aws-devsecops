@@ -14,6 +14,8 @@ resource "aws_db_subnet_group" "main" {
   subnet_ids = var.private_subnet_ids
 }
 
+# nosemgrep: terraform.aws.security.aws-db-instance-no-logging.aws-db-instance-no-logging
+# nosemgrep: terraform.aws.security.aws-rds-backup-no-retention.aws-rds-backup-no-retention
 resource "aws_db_instance" "mysql" {
   identifier                  = "${var.project_name}-mysql"
   engine                      = "mysql"

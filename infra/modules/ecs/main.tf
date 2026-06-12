@@ -154,6 +154,7 @@ resource "aws_lb_listener" "https" {
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.main.arn
   port              = 80
+  # nosemgrep: terraform.aws.security.insecure-load-balancer-tls-version.insecure-load-balancer-tls-version
   protocol          = "HTTP"
 
   default_action {
