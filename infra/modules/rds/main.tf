@@ -41,3 +41,5 @@ resource "aws_db_instance" "mysql" {
 
   tags = { Name = "${var.project_name}-rds" }
 }
+
+#teste
