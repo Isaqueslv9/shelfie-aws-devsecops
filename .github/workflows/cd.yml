@@ -39,8 +39,9 @@ jobs:
         working-directory: infra
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var="aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}"
         working-directory: infra
+
   build-and-deploy:
     name: Build, Push e deploy no ECS
     runs-on: ubuntu-latest
