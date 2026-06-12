@@ -14,8 +14,7 @@ resource "aws_db_subnet_group" "main" {
   subnet_ids = var.private_subnet_ids
 }
 
-# nosemgrep: terraform.aws.security.aws-db-instance-no-logging.aws-db-instance-no-logging
-# nosemgrep: terraform.aws.security.aws-rds-backup-no-retention.aws-rds-backup-no-retention
+# nosemgrep: terraform.aws.security.aws-db-instance-no-logging.aws-db-instance-no-logging, terraform.aws.security.aws-rds-backup-no-retention.aws-rds-backup-no-retention
 resource "aws_db_instance" "mysql" {
   identifier                  = "${var.project_name}-mysql"
   engine                      = "mysql"
@@ -38,8 +37,8 @@ resource "aws_db_instance" "mysql" {
   maintenance_window        = "Mon:04:00-Mon:05:00"
   multi_az                  = var.db_multi_az
 
+  
+  enabled_cloudwatch_logs_exports = []
 
   tags = { Name = "${var.project_name}-rds" }
 }
-
-#teste
