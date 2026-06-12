@@ -28,9 +28,13 @@ logs/
 check.txt
 secrets.txt
 
+
+
 # Documentação local
 diagrama.md
 plano.md
+README2.md
+
 
 # Terraform
 **/.terraform/
