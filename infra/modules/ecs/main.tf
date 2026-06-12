@@ -155,7 +155,7 @@ resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.main.arn
   port              = 80
   # nosemgrep: terraform.aws.security.insecure-load-balancer-tls-version.insecure-load-balancer-tls-version
-  protocol          = "HTTP"
+  protocol = "HTTP"
 
   default_action {
     type = var.acm_certificate_arn != "" ? "redirect" : "forward"

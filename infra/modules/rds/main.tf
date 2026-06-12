@@ -37,7 +37,7 @@ resource "aws_db_instance" "mysql" {
   maintenance_window        = "Mon:04:00-Mon:05:00"
   multi_az                  = var.db_multi_az
 
-  
+
   enabled_cloudwatch_logs_exports = []
 
   tags = { Name = "${var.project_name}-rds" }

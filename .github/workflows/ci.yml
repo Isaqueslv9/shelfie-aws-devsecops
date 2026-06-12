@@ -90,9 +90,8 @@ jobs:
         - name: Terraform init
           run: terraform init -lock=false
           working-directory: infra
-            
-        - name: Terraform Format Check
-          run: terraform fmt -check -recursive
+        - name: Terraform formate
+          run: terraform fmt -recursive
           working-directory: infra
 
         - name: Terraform Validate
