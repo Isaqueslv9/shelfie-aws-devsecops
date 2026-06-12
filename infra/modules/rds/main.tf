@@ -32,7 +32,6 @@ resource "aws_db_instance" "mysql" {
   skip_final_snapshot       = false
   final_snapshot_identifier = "${var.project_name}-final-snapshot"
   deletion_protection       = false
-  backup_retention_period   = 0
   backup_window             = "03:00-04:00"
   maintenance_window        = "Mon:04:00-Mon:05:00"
   multi_az                  = var.db_multi_az
