@@ -1,5 +1,43 @@
-.env
+# Sistema Operacional
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
+
+# Editores e IDEs
+.idea/
+.vscode/
+*.iml
+
+# Variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Python (pre-commit hooks)
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+*.log
+logs/
+
+# Arquivos locais
 check.txt
+secrets.txt
+
+# Documentação local
 diagrama.md
+plano.md
+
+# Terraform
+**/.terraform/
+**/.terraform.lock.hcl
+infra/terraform.tfvars
+infra/tfplan
+infra/**/*.tfstate
+infra/**/*.tfstate.backup
+infra/**/override.tf
+infra/**/override.tf.json

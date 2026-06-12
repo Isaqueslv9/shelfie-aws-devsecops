@@ -1,0 +1,10 @@
+.git
+.gitignore
+.env
+.env.*
+*.md
+assets/
+tests/
+.DS_Store
+Thumbs.db
+readme.md
